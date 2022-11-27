@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { DUMMY_EVENTSProps } from '../../dummy-data';
 import AddressIcon from '../icons/address-icon';
 import ArrowRightIcon from '../icons/arrow-right-icon';
@@ -24,7 +25,8 @@ const EventItem = ({
 
   return (
     <li className={classes.item}>
-      <img src={'/' + image} alt={title} />
+      <Image src={'/' + image} alt={title} width={650} height={300} />
+      {/* <img src={'/' + image} alt={title} /> */}
       <div className={classes.content}>
         <div className={classes.summary}>
           <h2>{title}</h2>

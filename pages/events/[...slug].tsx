@@ -7,6 +7,7 @@ import Button from '../../components/ui/Button';
 import ErrorAlert from '../../components/ui/ErrorAlert';
 import { DUMMY_EVENTSProps, getFilteredEvents } from '../../dummy-data';
 import useSWR from 'swr';
+import Head from 'next/head';
 interface IFilteredEventsPageProps {
   filteredEvents: DUMMY_EVENTSProps[];
   hasError?: boolean;
@@ -47,9 +48,17 @@ const FilteredEventsPage = ({
   //   return <p className="center">Loading...</p>;
   // }
 
+  const pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta name="description" content={`All events for`} />
+    </Head>
+  );
+
   if (hasError) {
     return (
       <Fragment>
+        {pageHeadData}
         <ErrorAlert>
           <p>Invalid Filter.</p>
         </ErrorAlert>
@@ -63,6 +72,7 @@ const FilteredEventsPage = ({
   if (filteredEvents?.length === 0) {
     return (
       <Fragment>
+        {pageHeadData}
         <ErrorAlert>
           <p>데이터가 없습니다</p>
         </ErrorAlert>
@@ -75,6 +85,7 @@ const FilteredEventsPage = ({
 
   return (
     <div>
+      {pageHeadData}
       <EventList items={filteredEvents} />
     </div>
   );

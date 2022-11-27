@@ -1,4 +1,5 @@
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import Head from 'next/head';
 import EventList from '../components/events/EventList';
 import { DUMMY_EVENTSProps, getFeaturedEvents } from '../dummy-data';
 
@@ -9,6 +10,10 @@ export interface IHomeProps {
 const Home = ({ featuredEvents }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div>
+      <Head>
+        <title>NextJs Evnents</title>
+        <meta name="description" content="이곳은 내용입니다." />
+      </Head>
       <EventList items={featuredEvents} />
     </div>
   );

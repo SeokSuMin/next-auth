@@ -1,4 +1,5 @@
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
 import { IHomeProps } from '..';
@@ -15,6 +16,9 @@ const AllEventsPage = ({ featuredEvents }: InferGetStaticPropsType<typeof getSta
 
   return (
     <Fragment>
+      <Head>
+        <title>All Evnents</title>
+      </Head>
       <EventSearch onSearch={findEventsHandler} />
       <EventList items={featuredEvents} />
     </Fragment>
