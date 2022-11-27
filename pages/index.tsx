@@ -1,14 +1,31 @@
-import Link from 'next/link';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import EventList from '../components/events/EventList';
-import { getFeaturedEvents } from '../dummy-data';
+import { DUMMY_EVENTSProps, getFeaturedEvents } from '../dummy-data';
 
-const Home = () => {
-  const featureEvents = getFeaturedEvents();
+export interface IHomeProps {
+  featuredEvents: DUMMY_EVENTSProps[];
+}
 
+const Home = ({ featuredEvents }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div>
-      <EventList items={featureEvents} />
+      <EventList items={featuredEvents} />
     </div>
   );
 };
 export default Home;
+
+export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
+  const featuredEvents = await getFeaturedEvents();
+  if (!featuredEvents) {
+    return {
+      notFound: true,
+    };
+  }
+  return {
+    props: {
+      featuredEvents,
+    },
+    revalidate: 60,
+  };
+};
