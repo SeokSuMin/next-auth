@@ -1,36 +1,64 @@
-import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import Head from 'next/head';
-import EventList from '../components/events/EventList';
-import { DUMMY_EVENTSProps, getFeaturedEvents } from '../dummy-data';
+import React, { useRef, useState } from 'react';
 
-export interface IHomeProps {
-  featuredEvents: DUMMY_EVENTSProps[];
+export interface IHomePageProps {
+  id: number;
+  email: string;
+  text: string;
 }
 
-const Home = ({ featuredEvents }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const HomePage = () => {
+  const [feedbackItems, setFeedbackItems] = useState<IHomePageProps[]>([]);
+
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const feedbackInputRef = useRef<HTMLTextAreaElement>(null);
+
+  const submitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const enteredEmail = emailInputRef?.current?.value;
+    const enteredFeedback = feedbackInputRef?.current?.value;
+    if (enteredEmail && enteredFeedback) {
+      const reqBody = { email: enteredEmail, text: enteredFeedback };
+      fetch('/api/feedback', {
+        method: 'POST',
+        body: JSON.stringify(reqBody),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => console.log);
+    }
+  };
+
+  const loadFeedbackHandler = () => {
+    fetch('/api/feedback')
+      .then((response) => response.json())
+      .then((data) => setFeedbackItems(data.feedback));
+  };
+
   return (
     <div>
-      <Head>
-        <title>NextJs Evnents</title>
-        <meta name="description" content="이곳은 내용입니다." />
-      </Head>
-      <EventList items={featuredEvents} />
+      <form onSubmit={submitHandler}>
+        <h1>The Home Page</h1>
+        <div>
+          <label htmlFor="email">Email Address</label>
+          <input type="email" id="email" ref={emailInputRef} />
+        </div>
+        <div>
+          <label htmlFor="feedback">Your Feedback</label>
+          <textarea id="feedback" rows={5} ref={feedbackInputRef} />
+        </div>
+        <button>Send Feedback</button>
+      </form>
+      <hr />
+      <button onClick={loadFeedbackHandler}>Load Feedback</button>
+      <ul>
+        {feedbackItems.map((item) => (
+          <li key={item.id}>{item.text}</li>
+        ))}
+      </ul>
     </div>
   );
 };
-export default Home;
-
-export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
-  const featuredEvents = await getFeaturedEvents();
-  if (!featuredEvents) {
-    return {
-      notFound: true,
-    };
-  }
-  return {
-    props: {
-      featuredEvents,
-    },
-    revalidate: 60,
-  };
-};
+export default HomePage;
