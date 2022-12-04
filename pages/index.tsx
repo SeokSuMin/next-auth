@@ -13,16 +13,16 @@ export interface IHomePageProps {
 const HomePage = () => {
   const { data: session, status } = useSession();
 
-  console.log('session', session);
+  if (!session) {
+    return <div>이곳은 메인 페이지 입니다.</div>;
+  }
 
-  return <div>메인 페이지 입니다!</div>;
+  return <div>반갑습니다 {session?.user.userId}님!</div>;
 };
 export default HomePage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
-
-  console.log(session);
 
   if (!session) {
     return {
@@ -34,6 +34,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   return {
-    props: {},
+    props: { session },
   };
 };

@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { signIn } from 'next-auth/react';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 
 const LoginForm = () => {
@@ -19,6 +18,7 @@ const LoginForm = () => {
       password,
     });
 
+    // 로그인 성공후 메인페이지로 리다이렉트 작업
     if (!result?.error) {
       router.replace('/');
     }
